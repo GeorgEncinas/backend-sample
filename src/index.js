@@ -1,6 +1,20 @@
 import express from 'express'
 import { checkLogin } from "./middleware/login";
 
+// getting-started.js MongoDb
+import mongoose from 'mongoose'
+const schema = 'sample'
+const urlDb = `mongodb://localhost/${schema}`;
+mongoose.connect(urlDb, { useNewUrlParser: true });
+
+var userSchema = new mongoose.Schema({
+    user: String,
+    name: String,
+    password: String
+});
+
+var User = mongoose.model('User', userSchema);
+
 const app = express()
 const handler = () => {
     console.log('http://localhost:9090')
