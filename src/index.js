@@ -62,4 +62,27 @@ app.post("/user/singup", (req, res) => {
     }
 });
 
+app.post("/user/login", (req, res) => {
+    const { body } = req
+    console.log('body :>> ', body)
+    if (body) {
+        const { user, password } = body
+        if (user && password) {
+            User.findOne({ user, password }).exec((err, userFound) => {
+                if (err)
+                    res.status(500).send({ msg: 'Error foun in find this user' })
+                else if (userFound)
+                    res.status(200).send({ msg: 'User created', userFound })
+                else
+                    res.status(404).send({ msg: 'No found this user' })
+            });
+        } else {
+            res.status(400).send({ msg: 'No found login data' })
+        }
+    }
+    else {
+        res.status(400).send({ msg: 'No found login data' })
+    }
+});
+
 app.listen(9090, handler)
