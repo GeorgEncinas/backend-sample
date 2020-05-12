@@ -14,7 +14,8 @@
   "author": "georg",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.9.13"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
