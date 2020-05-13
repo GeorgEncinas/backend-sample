@@ -43,19 +43,16 @@ app.post("/", checkLogin, (req, res) => {
 app.post("/user/singup", (req, res) => {
     const { body } = req
     console.log('body :>> ', body)
-    if (body) {
-        const { user, password } = body
-        if (user && password) {
+    
+    const { user, password } = body
+    
+    if ((body) && (user && password) ){
             User({ user, password }).save(function (err, newUser) {
                 if (err)
                     res.status(500).send({ msg: 'Error foun in save this user' })
                 else
                     res.status(201).send({ msg: 'User created', newUser })
-            });
-
-        } else {
-            res.status(400).send({ msg: 'No found login data' })
-        }
+            });        
     }
     else {
         res.status(400).send({ msg: 'No found login data' })
