@@ -8,7 +8,12 @@ const urlDb = `mongodb://localhost/${schema}`;
 mongoose.connect(urlDb, { useNewUrlParser: true });
 
 var userSchema = new mongoose.Schema({
-    user: String,
+    email: {
+        type: String,
+        index: true,
+        unique: true // Unique index. If you specify `unique: true`
+        // specifying `index: true` is optional if you do `unique: true`
+    },
     name: String,
     password: String
 });
@@ -46,7 +51,7 @@ app.post("/user/singup", (req, res) => {
     if (body) {
         const { user, password } = body
         if (user && password) {
-            User({ user, password }).save(function (err, newUser) {
+            User(body).save(function (err, newUser) {
                 if (err)
                     res.status(500).send({ msg: 'Error foun in save this user' })
                 else
