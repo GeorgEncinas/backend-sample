@@ -53,9 +53,9 @@ app.post("/", checkLogin, (req, res) => {
 app.post("/user/singup", (req, res) => {
     const { body } = req
     console.log('body :>> ', body)
+
     if (body) {
         const { email, password } = body
-
         if (email && password) {
             let response = {}
             Promise.all([
@@ -81,6 +81,7 @@ app.post("/user/singup", (req, res) => {
         } else {
             res.status(400).send({ msg: 'No found singup data' })
         }
+
     }
     else {
         res.status(400).send({ msg: 'No found singup data' })
