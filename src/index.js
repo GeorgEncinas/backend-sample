@@ -53,10 +53,9 @@ app.post("/", checkLogin, (req, res) => {
 app.post("/user/singup", (req, res) => {
     const { body } = req
     console.log('body :>> ', body)
+    const { email, password } = body
+    if ((body)&&(email && password)) {
 
-    if (body) {
-        const { email, password } = body
-        if (email && password) {
             let response = {}
             Promise.all([
                 UserSQL.create(body)
@@ -78,10 +77,6 @@ app.post("/user/singup", (req, res) => {
                     console.warn(err)
                     res.status(500).send({ msg: 'Error found in save this user' })
                 })
-        } else {
-            res.status(400).send({ msg: 'No found singup data' })
-        }
-
     }
     else {
         res.status(400).send({ msg: 'No found singup data' })
