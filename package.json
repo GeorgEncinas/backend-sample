@@ -14,8 +14,11 @@
   "author": "georg",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "express": "^4.17.1",
-    "mongoose": "^5.9.13"
+    "mongoose": "^5.9.13",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.8"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
