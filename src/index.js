@@ -1,8 +1,13 @@
 import express from 'express'
 import { checkLogin } from "./middleware/login";
+import { Sequelize, UserSQL } from "./sequelize";
+import bluebird from "bluebird";
+
+Promise = bluebird;
 
 // getting-started.js MongoDb
 import mongoose from 'mongoose'
+mongoose.Promise = bluebird
 const schema = 'sample'
 const urlDb = `mongodb://localhost/${schema}`;
 mongoose.connect(urlDb, { useNewUrlParser: true });
@@ -49,21 +54,36 @@ app.post("/user/singup", (req, res) => {
     const { body } = req
     console.log('body :>> ', body)
     if (body) {
-        const { user, password } = body
-        if (user && password) {
-            User(body).save(function (err, newUser) {
-                if (err)
-                    res.status(500).send({ msg: 'Error foun in save this user' })
-                else
-                    res.status(201).send({ msg: 'User created', newUser })
-            });
+        const { email, password } = body
 
+        if (email && password) {
+            let response = {}
+            Promise.all([
+                UserSQL.create(body)
+                    .then(userCreated => {
+                        response.sql = userCreated
+                        return userCreated
+                    }),
+                new User(body).save()
+                    .then(newUser => {
+                        response.noSql = newUser
+                        return newUser
+                    })
+            ])
+                .then(() => {
+                    response.msg = 'User created'
+                    res.status(201).send(response)
+                })
+                .catch(err => {
+                    console.warn(err)
+                    res.status(500).send({ msg: 'Error found in save this user' })
+                })
         } else {
-            res.status(400).send({ msg: 'No found login data' })
+            res.status(400).send({ msg: 'No found singup data' })
         }
     }
     else {
-        res.status(400).send({ msg: 'No found login data' })
+        res.status(400).send({ msg: 'No found singup data' })
     }
 });
 
