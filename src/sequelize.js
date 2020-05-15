@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize'
 import bluebird from "bluebird";
 
-
+import getModelStudent from "./models/student";
 
 const sequelize = new Sequelize('sample', 'root', 'root', {
     host: 'localhost',
@@ -16,7 +16,7 @@ const UserSQL = sequelize.define('User', {
         unique: true
     },
     name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
         // allowNull defaults to true
     },
     password: {
@@ -27,7 +27,8 @@ const UserSQL = sequelize.define('User', {
     // options
 });
 
+const StudentSQL = getModelStudent(sequelize)
 
-sequelize.sync()
+sequelize.sync({force: true})
 
-export { Sequelize, UserSQL }
+export { Sequelize, UserSQL, StudentSQL }

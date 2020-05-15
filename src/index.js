@@ -1,6 +1,7 @@
 import express from 'express'
 import { checkLogin } from "./middleware/login";
 import { Sequelize, UserSQL } from "./sequelize";
+import studentRotes from './routes/student'
 import bluebird from "bluebird";
 
 Promise = bluebird;
@@ -32,6 +33,11 @@ const handler = () => {
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+
+// routes
+app.use('/student', studentRotes);
+
 // app.use(function (req, res, next) {
 //     res.status(404).send('Sorry cant find that!');
 // });
