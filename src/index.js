@@ -69,13 +69,15 @@ app.post("/user/singup", (req, res) => {
                 })
         ])
             .then(() => {
-                response.msg = 'User created'
-                res.status(201).send(response)
-            })
-            .catch(err => {
-                console.warn(err)
-                res.status(500).send({ msg: 'Error found in save this user' })
-            })
+        .then(() => {
+            response.msg = 'User created'
+            res.status(201).send(response)
+        })
+        .catch(err => {
+            
+            console.warn(err)
+            res.status(500).send({ msg: 'Error found in save this user' })
+        })
     }
     else {
         res.status(400).send({ msg: 'No found singup data' })
