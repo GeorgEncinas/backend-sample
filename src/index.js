@@ -97,6 +97,11 @@ app.post("/user/singup", (req, res) => {
             res.status(201).send(response)
         })
         .catch(err => {
+            if (response.noSql)
+                response.noSql.destroy()
+            if (response.sql)
+                response.sql.destroy()
+            
             console.warn(err)
             res.status(500).send({ msg: 'Error found in save this user' })
         })
