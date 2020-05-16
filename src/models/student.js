@@ -25,16 +25,5 @@ const options = { tableName: 'student' };
 function getModel(Sequelize) {
     return Sequelize.define('Student', fields, options);
 }
-// const StudentSQL = db.define('Student', fields, {
-//     //options
-// });
-
-//StudentSQL.sync({force:true})
-
-// StudentSQL.sync().then(()=>{
-//     return StudentSQL.create({
-//         name: 'Alvaro'
-//     }) 
-// })
 
 export default getModel

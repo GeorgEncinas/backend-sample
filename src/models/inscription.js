@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 
-const db  = require('../../config/mysequelize')
+// const db  = require('../../config/mysequelize')
 
-const InscriptionSQL = db.define('Inscription', {
+const fields = {
     id_inscription: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -14,32 +14,27 @@ const InscriptionSQL = db.define('Inscription', {
     id_student: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'Students', // Can be both a string representing the table name or a Sequelize model
+            model: 'student', // Can be both a string representing the table name or a Sequelize model
             key: 'id_student'
         }
     },
     id_course: {
         type: Sequelize.INTEGER,
         references: {
-            model: 'Courses', // Can be both a string representing the table name or a Sequelize model
+            model: 'course', // Can be both a string representing the table name or a Sequelize model
             key: 'id_course'
           }
     }
 
-}, {
-    //options
-});
-// InscriptionSQL.sync({force:true})
+};
 
-InscriptionSQL.sync().then(()=>{
-    return InscriptionSQL.create({
-        year: 2020,
-        id_student: 1,
-        id_course: 1,
+const options = { tableName: 'inscription' };
 
-    })
-    
-})
+function getModel(Sequelize) {
+    return Sequelize.define('Inscription', fields, options);
+}
+
+export default getModel
 
 
 

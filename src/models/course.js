@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize')
 
-const db  = require('../../config/mysequelize')
+// const db  = require('../../config/mysequelize')
 
-const CourseSQL = db.define('Course', {
+const fields =  {
     id_course: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -10,18 +10,16 @@ const CourseSQL = db.define('Course', {
     },
     name: {
         type: Sequelize.STRING
-    }
-}, {
-    //options
-});
-// CourseSQL.sync({force:true})
+    },
+};
 
-CourseSQL.sync().then(()=>{
-    return CourseSQL.create({
-        name: 'Math'
-    })
-    
-})
+const options = { tableName: 'course' };
+
+function getModel(Sequelize) {
+    return Sequelize.define('Course', fields, options);
+}
+
+export default getModel
 
 
 

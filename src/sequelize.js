@@ -2,6 +2,8 @@ import Sequelize from 'sequelize'
 import bluebird from "bluebird";
 
 import getModelStudent from "./models/student";
+import getModelCourse from "./models/course";
+import getModelInscription from "./models/inscription";
 
 const sequelize = new Sequelize('sample', 'root', 'root', {
     host: 'localhost',
@@ -28,7 +30,8 @@ const UserSQL = sequelize.define('User', {
 });
 
 const StudentSQL = getModelStudent(sequelize)
+const CourseSQL = getModelCourse(sequelize)
+const InscriptionSQL = getModelInscription(sequelize)
 
 sequelize.sync({force: true})
-
-export { Sequelize, UserSQL, StudentSQL }
+export { Sequelize, UserSQL, StudentSQL, CourseSQL, InscriptionSQL  }
