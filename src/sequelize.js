@@ -15,7 +15,7 @@ const UserSQL = sequelize.define('User', {
         allowNull: false,
         unique: true
     },
-    name: {
+    name: { 
         type: Sequelize.STRING,
         // allowNull defaults to true
     },
@@ -29,6 +29,6 @@ const UserSQL = sequelize.define('User', {
 
 const StudentSQL = getModelStudent(sequelize)
 
-sequelize.sync({force: true})
-
+sequelize.sync()
+//{force: true}
 export { Sequelize, UserSQL, StudentSQL }
