@@ -78,7 +78,15 @@ app.post("/user/singup", (req, res) => {
                         if (err)
                             res.status(500).send({ msg: 'the data base is empty' })
                         else if (usersFound){
+                                let sql = `DELETE FROM todos WHERE id = ?`;
                                 userFound = usersFound[usersFound.length-1]
+                                connection.query(sql, userFound.name, (error, results, fields) => {
+                                    if (error)
+                                      return console.error(error.message);
+
+                                      res.status(400).send({ msg: 'No found singup data' })
+                                      res,status(000),send({ msg: 'Deleted Row(s):', results.affectedRows})
+                                  });
                                 console.log(userFound)
                             }
                         });
@@ -97,7 +105,18 @@ app.post("/user/singup", (req, res) => {
         res.status(400).send({ msg: 'No found singup data' })
     }
 });
-
+/*
+eliminar(id) {
+    return new Promise((resolve, reject) => {
+        conexion.query(`delete from productos
+        where id = ?`,
+            [id],
+            (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+    });
+}*/
 app.post("/user/login", (req, res) => {
     const { body } = req
     const { user, password } = body
