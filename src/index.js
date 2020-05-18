@@ -3,6 +3,7 @@ import { checkLogin } from "./middleware/login";
 import { Sequelize, UserSQL } from "./sequelize";
 import studentRotes from './routes/student'
 import bluebird from "bluebird";
+const bcrypt = require('bcrypt')
 
 Promise = bluebird;
 
@@ -56,40 +57,30 @@ app.post("/", checkLogin, (req, res) => {
     res.status(200).send(body)
 });
 
-app.post("/user/singup", (req, res) => {
-    const { body } = req
-    console.log('body :>> ', body)
+app.post("/user/singup", async (req, res) => {
+    
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const body1 = { email: req.body.email,name: req.body.name, password: hashedPassword  }
+    const {body} = req
+    //const { body } = req
     const { email, password } = body
+    var mongo = false
+    var mysql = false
+    console.log('body :>> ', body)
     if ((body) && (email && password)){
         let response = {}
         Promise.all([
+            new User(body1).save()
+            .then(newUser => {
+                response.noSql = newUser
+                mongo = true
+                return newUser
+            }),
             UserSQL.create(body)
                 .then(userCreated => {
                     response.sql = userCreated
+                    mysql = true
                     return userCreated 
-                }),
-            new User(body).save()
-                .then(newUser => {
-                    response.noSql = newUser
-                    return newUser
-                })
-                .catch(err => {
-                    User.find({ user, password }).exec((err, usersFound) => {
-                        if (err)
-                            res.status(500).send({ msg: 'the data base is empty' })
-                        else if (usersFound){
-                                let sql = `DELETE FROM todos WHERE id = ?`;
-                                userFound = usersFound[usersFound.length-1]
-                                connection.query(sql, userFound.name, (error, results, fields) => {
-                                    if (error)
-                                      return console.error(error.message);
-
-                                      res.status(400).send({ msg: 'No found singup data' })
-                                      res,status(000),send({ msg: 'Deleted Row(s):', results.affectedRows})
-                                  });
-                                console.log(userFound)
-                            }
-                        });
                 })
         ])
         .then(() => {
@@ -98,38 +89,55 @@ app.post("/user/singup", (req, res) => {
         })
         .catch(err => {
             console.warn(err)
-            res.status(500).send({ msg: 'Error found in save this user' })
+            
+            if(mongo){
+                User.deleteOne({ name: newUser.name }, function (err) {
+                    if (err) return handleError(err);                    
+                  });                
+                  res.status(500).send({ msg: 'Error found in save this user' })            
+            }
+            else if (mysql){
+                    UserSQL.deleteOne({ name: newUser.name }, function (err) {
+                        if (err) return handleError(err);                    
+                      });      
+                      res.status(500).send({ msg: 'Error found in save this user' }) }
+                else 
+                res.status(500).send({msg: 'The email entered already exists'})
         })
     }
     else {
         res.status(400).send({ msg: 'No found singup data' })
     }
 });
-/*
-eliminar(id) {
-    return new Promise((resolve, reject) => {
-        conexion.query(`delete from productos
-        where id = ?`,
-            [id],
-            (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-    });
-}*/
-app.post("/user/login", (req, res) => {
+
+app.post("/user/login", async (req, res) => {
     const { body } = req
-    const { user, password } = body
+    const { name, password } = body
+    User.find
     console.log('body :>> ', body)
-    if ((body)&&(user && password)) {
-        User.findOne({ user, password }).exec((err, userFound) => {
+    if ((body)&&(name && password)) {
+        User.findOne({ name, password }).exec((err, userFound) => { });
+            if (err)
+                res.status(500).send({ msg: 'Error foun in find this user' })
+            else if (userFound){
+                    if(await bcrypt.compare(req.body.password, userFound.password)) {
+                        res.send('Success')
+                    } else {
+                        res.send('Not Allowed')
+                    }
+                    res.status(200).send({ msg: 'User created', userFound })
+                }    
+                else
+                    res.status(404).send({ msg: 'No found this user' })
+           
+        /*User.findOne({ user, password }).exec((err, userFound) => {
             if (err)
                 res.status(500).send({ msg: 'Error foun in find this user' })
             else if (userFound)
                     res.status(200).send({ msg: 'User created', userFound })
                 else
                     res.status(404).send({ msg: 'No found this user' })
-            });
+            });*/
     }
     else {
         res.status(400).send({ msg: 'No found login data' })
