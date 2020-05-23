@@ -25,7 +25,7 @@ var userSchema = new mongoose.Schema({
     password: String
 });
 
-var User = mongoose.model('User', userSchema);
+export var User = mongoose.model('User', userSchema);
 
 const app = express()
 const handler = () => {
