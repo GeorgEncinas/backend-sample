@@ -3,7 +3,7 @@ import { checkLogin } from "../middleware/login";
 import { mdJWT } from '../middleware/verifyToken'
 import { User } from "../index"
 import { UserSQL } from "../sequelize";
-import { sign } from '../services/jwtService'
+import { sign, decode } from '../services/jwtService'
 
 console.log(process.env.ENVIRONMENT)
 

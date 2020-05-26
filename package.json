@@ -4,7 +4,7 @@
   "description": "pruebas",
   "main": "index.js",
   "scripts": {
-    "dev": "ENVIRONMENT=develop SECRET=holaToken nodemon src/index.js --exec babel-node",
+    "dev": "nodemon src/index.js --exec babel-node",
     "build": "babel src -d dist"
   },
   "keywords": [
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.7.2",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.13",
