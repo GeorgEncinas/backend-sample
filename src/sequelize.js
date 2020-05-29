@@ -40,5 +40,5 @@ const InscriptionSQL = getModelInscription(sequelize)
 StudentSQL.belongsToMany(CourseSQL, { through: InscriptionSQL });
 CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL });
 
-sequelize.sync()
+sequelize.sync({force: true})
 export { Sequelize, UserSQL, StudentSQL, CourseSQL, InscriptionSQL  }
