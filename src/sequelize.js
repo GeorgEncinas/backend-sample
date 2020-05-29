@@ -7,7 +7,11 @@ import getModelInscription from "./models/inscription";
 
 const sequelize = new Sequelize('sample', 'root', 'root', {
     host: 'localhost',
-    dialect: 'mysql'
+    dialect: 'mysql',
+    define: {
+        timestamps: false,
+        underscored: true
+    }
 });
 
 const UserSQL = sequelize.define('User', {
@@ -33,5 +37,8 @@ const StudentSQL = getModelStudent(sequelize)
 const CourseSQL = getModelCourse(sequelize)
 const InscriptionSQL = getModelInscription(sequelize)
 
-sequelize.sync({force: true})
+StudentSQL.belongsToMany(CourseSQL, { through: InscriptionSQL });
+CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL });
+
+sequelize.sync()
 export { Sequelize, UserSQL, StudentSQL, CourseSQL, InscriptionSQL  }
