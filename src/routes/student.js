@@ -18,9 +18,11 @@ student.get('/info', (req, res, next) => {
 })
 
 student.get('/info/:studentId', (req, res, next) => {
-    const { studentId: StudentId } =  req.params
+    const { studentId: id } = req.params
+    // console.dir({ StudentSQL, CourseSQL, InscriptionSQL}, {colors:true,depth:3})
     StudentSQL.findOne({
-        StudentId,
+        where: { id },
+        attributes: ['id', 'email', StudentSQL.sequelize.literal("(select 51+30) as nota")],
         include: {
             model: CourseSQL,
             as: 'courses'
@@ -33,6 +35,7 @@ student.get('/info/:studentId', (req, res, next) => {
                 res.status(404).json({ msg: 'No found student' })
         })
         .catch(err => {
+            console.error(err)
             res.status(500).json(err)
         })
 })

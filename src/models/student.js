@@ -14,9 +14,10 @@ const fields = {
     },
 };
 
-const options = { tableName: 'student' };
+const options = { tableName: 'student'};
 
 function getModel(Sequelize) {
+    Sequelize.literal("select 2+2 as result;")
     return Sequelize.define('Student', fields, options);
 }
 

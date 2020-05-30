@@ -10,7 +10,8 @@ const sequelize = new Sequelize('sample', 'root', 'root', {
     dialect: 'mysql',
     define: {
         timestamps: false,
-        underscored: true
+        underscored: true,
+        underscoredAll: true,
     }
 });
 
@@ -37,8 +38,8 @@ const StudentSQL = getModelStudent(sequelize)
 const CourseSQL = getModelCourse(sequelize)
 const InscriptionSQL = getModelInscription(sequelize)
 
-StudentSQL.belongsToMany(CourseSQL, { through: InscriptionSQL });
-CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL });
+StudentSQL.belongsToMany(CourseSQL, { through: { model: InscriptionSQL }, as: { singular: 'inscription', plural: 'courses'}});
+CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL, as: 'inscription' });
 
 sequelize.sync()
 export { Sequelize, UserSQL, StudentSQL, CourseSQL, InscriptionSQL  }
