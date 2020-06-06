@@ -1,13 +1,14 @@
 import express from "express";
-import { StudentSQL, CourseSQL, InscriptionSQL } from "../sequelize";
+import { Student, Course, Inscription } from "../models/mongoDb";
+import mongoose from 'mongoose'
 
-const student = express.Router()
+const mStudent = express.Router()
 
-student.get('/info', (req, res, next) => {
+mStudent.get('/info', (req, res, next) => {
     const { body } = req
-    StudentSQL.findOne(body)
+    Student.findById(body)
         .then(studentFound => {
-            if(studentFound)
+            if (studentFound)
                 res.status(200).json(studentFound)
             else
                 res.status(404).json({ msg: 'No found student' })
@@ -17,16 +18,17 @@ student.get('/info', (req, res, next) => {
         })
 })
 
-student.get('/info/:studentId', (req, res, next) => {
+mStudent.get('/info/:studentId', (req, res, next) => {
     const { studentId: id } = req.params
-    StudentSQL.findOne({
-        where: { id },
-        attributes: ['id', 'email', StudentSQL.sequelize.literal("(select 51+30) as nota")],
-        include: {
-            model: CourseSQL,
-            as: 'courses'
-        }
+    Student.findOne({
+        _id: id
     })
+        .populate({
+            path: 'courses',
+            populate: {
+                path: 'inscription'
+            }
+        })
         .then(studentFound => {
             if (studentFound)
                 res.status(200).json(studentFound)
@@ -39,9 +41,9 @@ student.get('/info/:studentId', (req, res, next) => {
         })
 })
 
-student.post('/singup', (req, res, next) => {
+mStudent.post('/singup', (req, res, next) => {
     const { body } = req
-    StudentSQL.create(body)
+    Student.create(body)
         .then(studentCreated => {
             res.status(200).json(studentCreated)
         })
@@ -50,9 +52,9 @@ student.post('/singup', (req, res, next) => {
         })
 })
 
-student.post('/curse', (req, res, next) => {
+mStudent.post('/curse', (req, res, next) => {
     const { body } = req
-    CourseSQL.create(body)
+    Course.create(body)
         .then(studentCreated => {
             res.status(200).json(studentCreated)
         })
@@ -61,16 +63,27 @@ student.post('/curse', (req, res, next) => {
         })
 })
 
-student.post('/inscription', (req, res, next) => {
+mStudent.post('/inscription', (req, res, next) => {
     const { body } = req
-    console.dir(Inscription, {colors: true})
-    InscriptionSQL.create(body)
+    console.dir(Inscription, { colors: true })
+    Inscription.create(body)
         .then(studentCreated => {
             res.status(200).json(studentCreated)
+        })
+        .then(() => {
+            Student.update({
+                _id: req.body.student
+            },
+                {
+                    '$push': {
+                        courses: 
+                            mongoose.Types.ObjectId(req.body.course)
+                    }
+                })
         })
         .catch(err => {
             res.status(500).json(err)
         })
 })
 
-export default student
+export default mStudent

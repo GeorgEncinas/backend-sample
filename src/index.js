@@ -2,6 +2,7 @@ import express from 'express'
 
 import { Sequelize, UserSQL } from "./sequelize";
 import studentRotes from './routes/student'
+import mStudent from './routes/mongoStudent'
 import bluebird from "bluebird";
 import { example as exampleRoute } from './routes/example'
 
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 // routes
 app.use('/student', studentRotes);
+app.use('/v2/student', mStudent);
 
 // app.use(function (req, res, next) {
 //     res.status(404).send('Sorry cant find that!');
