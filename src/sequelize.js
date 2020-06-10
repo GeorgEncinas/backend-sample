@@ -5,7 +5,8 @@ import getModelStudent from "./models/student";
 import getModelCourse from "./models/course";
 import getModelInscription from "./models/inscription";
 
-const sequelize = new Sequelize('sample', 'root', 'root', {
+const emitter = require('./index.js')
+const sequelize = new Sequelize('sample', 'root', 'rootr', {
     host: 'localhost',
     dialect: 'mysql',
     define: {
@@ -41,5 +42,9 @@ const InscriptionSQL = getModelInscription(sequelize)
 StudentSQL.belongsToMany(CourseSQL, { through: { model: InscriptionSQL }, as: { singular: 'inscription', plural: 'courses'}});
 CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL, as: 'inscription' });
 
-sequelize.sync()
+sequelize.sync().then(()=>{
+                emitter.emit('sequelizeReady');
+            },(err)=>{
+                Console.log('error al cargar la base de datos')
+            })
 export { Sequelize, UserSQL, StudentSQL, CourseSQL, InscriptionSQL  }
