@@ -65,23 +65,23 @@ mStudent.post('/curse', (req, res, next) => {
 
 mStudent.post('/inscription', (req, res, next) => {
     const { body } = req
-    console.dir(Inscription, { colors: true })
-    Inscription.create(body)
-        .then(studentCreated => {
-            res.status(200).json(studentCreated)
+    Promise.all([
+        Inscription.create(body),
+        Student.updateOne({
+            _id: req.body.student
+        }, {
+            $addToSet: {
+                courses:
+                    mongoose.Types.ObjectId(req.body.course)
+            }
         })
-        .then(() => {
-            Student.update({
-                _id: req.body.student
-            },
-                {
-                    '$push': {
-                        courses: 
-                            mongoose.Types.ObjectId(req.body.course)
-                    }
-                })
+    ])
+        .then(studentCreated => {
+            console.log(studentCreated)
+            res.status(200).json(studentCreated[0])
         })
         .catch(err => {
+            console.error(err)
             res.status(500).json(err)
         })
 })

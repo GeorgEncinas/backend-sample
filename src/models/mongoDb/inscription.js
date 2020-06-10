@@ -6,4 +6,6 @@ const InscriptionSchema = new Schema({
     year: Number
 })
 
+InscriptionSchema.index({ student: 1, course: 1 }, { unique: true });
+
 export default model('Inscription', InscriptionSchema)
