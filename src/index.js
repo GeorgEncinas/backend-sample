@@ -32,14 +32,6 @@ var userSchema = new mongoose.Schema({
 export var User = mongoose.model('User', userSchema);
 
 const app = express()
-function mensaje(){
-    emitter.on('sequelizeReady',()=>{
-        app.listen(9090, handler)
-    })
-}
-
-module.exports = emitter;
-
 const handler = () => {
     console.log('http://localhost:9090')
 }
@@ -58,3 +50,8 @@ app.use('/v2/student', mStudent);
 
 app.use(exampleRoute)
 
+emitter.on('sequelizeReady',()=>{
+    app.listen(9090, handler)
+})
+
+module.exports = emitter;

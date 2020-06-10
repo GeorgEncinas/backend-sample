@@ -6,7 +6,7 @@ import getModelCourse from "./models/course";
 import getModelInscription from "./models/inscription";
 
 const emitter = require('./index.js')
-const sequelize = new Sequelize('sample', 'root', 'rootr', {
+const sequelize = new Sequelize('sample', 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql',
     define: {
