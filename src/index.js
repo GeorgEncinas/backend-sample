@@ -5,6 +5,7 @@ import studentRotes from './routes/student'
 import mStudent from './routes/mongoStudent'
 import bluebird from "bluebird";
 import { example as exampleRoute } from './routes/example'
+import cors from 'cors'
 
 Promise = bluebird;
 
@@ -29,6 +30,7 @@ var userSchema = new mongoose.Schema({
 export var User = mongoose.model('User', userSchema);
 
 const app = express()
+app.use(cors())
 const handler = () => {
     console.log('http://localhost:9090')
 }
