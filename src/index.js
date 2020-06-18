@@ -30,7 +30,12 @@ var userSchema = new mongoose.Schema({
 export var User = mongoose.model('User', userSchema);
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: [
+        'http://localhost:4200',
+        'http://editor.swagger.io',
+    ]
+}))
 const handler = () => {
     console.log('http://localhost:9090')
 }
