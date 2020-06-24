@@ -76,66 +76,55 @@ example.post("/user/singup", (req, res) => {
     }
 });
 
-example.post("/user/withArray", (req, res) => {
+example.post(['/user/withArray','/user/createWithList'], (req, res) => {
     const { body } = req
     console.dir({
         info: `'body :>>`,
         body
     }, { colors: true })
-    let response = []
+    let responseArray = []
     async.each(body, (user,callback)=>{
-        response.push(user)
-        callback();
+        if (user) {
+            const { email, password } = user
+            if (email && password) {
+                let response = {}
+                Promise.all([
+                    UserSQL.create(user)
+                        .then(userCreated => {
+                            response.sql = userCreated
+                            return userCreated
+                        }),
+                    new User(user).save()
+                        .then(newUser => {
+                            response.noSql = newUser
+                            return newUser
+                        })
+                ])
+                    .then(() => {
+                        const { newUser } = response.noSql
+                        response.msg = 'User created'
+                        sign(newUser)
+                            .then(token => {
+                                response.token = token
+                                responseArray.push(response)
+                                callback();
+                            })
+                    })
+                    .catch(err => {
+                        console.warn(err)
+                        res.status(500).send({ msg: 'Error found in save this user' })
+                    })
+            } else {
+
+                res.status(400).send({ msg: 'No found singup data' })
+            }
+        }
     },(err)=>{
-        console.log("fin")
-        // if(err)
-        //     res.status(500).send({ msg: 'Error found in save this user' })
-        // else
-        //     res.status(201).send(response)
+        if(err)
+            res.status(500).send({ msg: 'Error found in save this user' })
+        else
+            res.status(201).send(responseArray)
     })
-
-    // let response = body.map(user => {
-    // Promise.all([
-
-    // ])
-    // if (user) {
-    //         const { email, password } = user
-    //         if (email && password) {
-    //             let response = {}
-    //             Promise.all([
-    //                 UserSQL.create(body)
-    //                     .then(userCreated => {
-    //                         response.sql = userCreated
-    //                         return userCreated
-    //                     }),
-    //                 new User(body).save()
-    //                     .then(newUser => {
-    //                         response.noSql = newUser
-    //                         return newUser
-    //                     })
-    //             ])
-    //                 .then(() => {
-    //                     const { newUser } = response.noSql
-    //                     response.msg = 'User created'
-    //                     sign(newUser)
-    //                         .then(token => {
-    //                             response.token = token
-    //                             res.status(201).send(response)
-    //                         })
-    //                 })
-    //                 .catch(err => {
-    //                     console.warn(err)
-    //                     res.status(500).send({ msg: 'Error found in save this user' })
-    //                 })
-    //         } else {
-    //             res.status(400).send({ msg: 'No found singup data' })
-    //         }
-
-    // }
-    // else {
-    //     res.status(400).send({ msg: 'No found singup data' })
-    // }
-
    
 });
 
@@ -161,6 +150,28 @@ example.post("/user/login", (req, res) => {
         res.status(400).send({ msg: 'No found login data' })
     }
 });
+
+example.patch('/user/:email', (req, res, next) => {
+    const {email} = req.params
+    if(email){
+        Promise.allSettled([ 
+            UserSQL.update(
+                {password: req.body.password},
+                {where: { email: req.params.email}}
+            ),
+            User.findOneAndUpdate(
+                {email : req.params.email},
+                {password : req.body.password}
+            )
+        ]).then((results) => {
+            results.forEach((result) => console.log(result.status))
+            res.status(200).send({ msg: 'password updated succesfully' })
+        });  
+    }else{
+        res.status(400).send({ msg: 'Email not provided' })
+    }
+});
+
 
 
 export { example }
