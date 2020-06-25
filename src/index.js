@@ -24,7 +24,8 @@ var userSchema = new mongoose.Schema({
         // specifying `index: true` is optional if you do `unique: true`
     },
     name: String,
-    password: String
+    password: String,
+    active: { type: Boolean, default: true },
 });
 
 export var User = mongoose.model('User', userSchema);

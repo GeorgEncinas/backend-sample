@@ -63,10 +63,10 @@ student.post('/curse', (req, res, next) => {
 
 student.post('/inscription', (req, res, next) => {
     const { body } = req
-    console.dir(Inscription, {colors: true})
+    console.log(body)
     InscriptionSQL.create(body)
-        .then(studentCreated => {
-            res.status(200).json(studentCreated)
+        .then(courseCreated => {
+            res.status(200).json(courseCreated)
         })
         .catch(err => {
             res.status(500).json(err)

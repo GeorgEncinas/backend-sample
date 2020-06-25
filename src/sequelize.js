@@ -5,7 +5,7 @@ import getModelStudent from "./models/student";
 import getModelCourse from "./models/course";
 import getModelInscription from "./models/inscription";
 
-const sequelize = new Sequelize('sample', 'root', 'root', {
+const sequelize = new Sequelize('sample', 'root', 'mysqlmysql', {
     host: 'localhost',
     dialect: 'mysql',
     define: {

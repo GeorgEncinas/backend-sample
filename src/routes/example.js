@@ -172,6 +172,28 @@ example.patch('/user/:email', (req, res, next) => {
     }
 });
 
+example.delete('/user/:email',(req,res,next)=>{
+    const {email} = req.params
+    if(email){
+        Promise.allSettled([ 
+            UserSQL.update(
+                {active: false},
+                {where: { email: req.params.email}}
+            ),
+            User.findOneAndUpdate(
+                {email : req.params.email},
+                {active : false}
+            )
+        ]).then((results) => {
+            results.forEach((result) => console.log(result.status))
+            res.status(200).send({ msg: 'user deleted' })
+        });  
+    }else{
+        res.status(400).send({ msg: 'Email not provided' })
+    }
+})
+
+
 
 
 export { example }
