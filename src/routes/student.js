@@ -63,14 +63,35 @@ student.post('/curse', (req, res, next) => {
 
 student.post('/inscription', (req, res, next) => {
     const { body } = req
-    console.log(body)
+    console.dir(InscriptionSQL, {colors: true})
     InscriptionSQL.create(body)
-        .then(courseCreated => {
-            res.status(200).json(courseCreated)
+        .then(studentCreated => {
+            res.status(200).json(studentCreated)
         })
         .catch(err => {
             res.status(500).json(err)
         })
 })
+//another option
+// student.post('/inscription', (req, res, next) => {
+//     const { body } = req
+//     console.log(body)
+//     Promise.all([
+//         StudentSQL.findByPk(body.student_id),
+//         CourseSQL.findByPk(body.course_id)
+//     ]).then(([student, course]) => 
+//         InscriptionSQL.create({
+//             year: body.year,
+//             StudentId: student.dataValues.id,
+//             CourseId: course.dataValues.id
+//         }).then(courseCreated => {
+//             res.status(200).json(courseCreated)
+//         })
+//         .catch(err => {
+//             res.status(500).json(err)
+//         })
+//     )
+    
+// })
 
 export default student
