@@ -38,7 +38,7 @@ const StudentSQL = getModelStudent(sequelize)
 const CourseSQL = getModelCourse(sequelize)
 const InscriptionSQL = getModelInscription(sequelize)
 
-StudentSQL.belongsToMany(CourseSQL, { through: { model: InscriptionSQL }, as: { singular: 'inscription', plural: 'courses'}});
+StudentSQL.belongsToMany(CourseSQL, { through: { model: 'Inscription' }, as: 'courses'});
 CourseSQL.belongsToMany(StudentSQL, { through: InscriptionSQL, as: 'inscription' });
 
 sequelize.sync()

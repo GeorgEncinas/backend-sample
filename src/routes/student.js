@@ -24,7 +24,11 @@ student.get('/info/:studentId', (req, res, next) => {
         attributes: ['id', 'email', StudentSQL.sequelize.literal("(select 51+30) as nota")],
         include: {
             model: CourseSQL,
-            as: 'courses'
+            attributes: ['name'],
+            as: 'courses',
+            through:{
+                attributes: ['year']
+            },
         }
     })
         .then(studentFound => {
@@ -50,7 +54,7 @@ student.post('/singup', (req, res, next) => {
         })
 })
 
-student.post('/curse', (req, res, next) => {
+student.post('/course', (req, res, next) => {
     const { body } = req
     CourseSQL.create(body)
         .then(studentCreated => {
@@ -63,7 +67,7 @@ student.post('/curse', (req, res, next) => {
 
 student.post('/inscription', (req, res, next) => {
     const { body } = req
-    console.dir(Inscription, {colors: true})
+    console.dir(InscriptionSQL, {colors: true})
     InscriptionSQL.create(body)
         .then(studentCreated => {
             res.status(200).json(studentCreated)
