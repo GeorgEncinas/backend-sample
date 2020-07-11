@@ -12,6 +12,7 @@ const fields = {
             isEmail: true,
         }
     },
+    image: Sequelize.STRING
 };
 
 const options = { tableName: 'student'};
