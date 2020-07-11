@@ -1,6 +1,5 @@
 import express from "express";
 import { StudentSQL, CourseSQL, InscriptionSQL } from "../sequelize";
-// import { mdUpload } from "../services/_uploadService";
 import { mdUploadImage } from "../services/uploadService";
 
 const student = express.Router()
