@@ -1,4 +1,5 @@
 import express from "express";
+import fs from 'fs'
 import { StudentSQL, CourseSQL, InscriptionSQL } from "../sequelize";
 import { mdUploadImage } from "../services/uploadService";
 
