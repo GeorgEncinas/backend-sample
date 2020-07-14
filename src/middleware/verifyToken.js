@@ -13,11 +13,9 @@ const mdJWT = (req, res, next) => {
                     res.status(401).json({ msg: err.message })
                 else
                     res.status(401).json({ msg: 'Invalid token' })
-                next(false)
             })
     else {
         res.send(401).json({ msg: 'Invalid token' })
-        next(false)
     }
 }
 
