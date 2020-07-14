@@ -12,6 +12,13 @@ const fields = {
             isEmail: true,
         }
     },
+    /**
+     * ALTER TABLE `sample`.`student` 
+     * ADD COLUMN `password` VARCHAR(255) NULL AFTER `email`;
+     */
+    password:  {
+        type: Sequelize.STRING
+    },
     image: Sequelize.STRING
 };
 
