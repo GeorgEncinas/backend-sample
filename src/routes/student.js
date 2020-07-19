@@ -5,6 +5,7 @@ import { StudentSQL, CourseSQL, InscriptionSQL } from "../sequelize";
 import { mdUploadImage } from "../services/uploadService";
 import { sign } from "../services/jwtService";
 import { mdJWT } from "../middleware/verifyToken";
+import { get } from "http";
 
 const student = express.Router()
 
@@ -43,6 +44,15 @@ student.post('/upload-image/:userId', mdUploadImage, (req, res) => {
         })
 })
 
+  /* @swagger get
+   * path: /get-image/:image
+   * description: Return a image profile 
+   * responses:
+   *     404:
+   *       description: "Image not found"
+   *     200:
+   *       description: "Its ok"
+   */
 student.get('/get-image/:image', mdJWT, (req, res)=>{
     const {image} = req.params
     const pathFile = `uploads/students/${image}`;

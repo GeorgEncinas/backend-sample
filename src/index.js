@@ -7,6 +7,11 @@ import bluebird from "bluebird";
 import { example as exampleRoute } from './routes/example'
 import cors from 'cors'
 
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yamljs'
+const swaggerDocument = YAML.load('./doc/sample.yaml');
+// const swaggerDocument = Lib.read('./src');
+
 Promise = bluebird;
 
 // getting-started.js MongoDb
@@ -30,6 +35,13 @@ var userSchema = new mongoose.Schema({
 export var User = mongoose.model('User', userSchema);
 
 const app = express()
+
+app.use('/api-docs', function(req, res, next){
+    swaggerDocument.host = req.get('host');
+    req.swaggerDoc = swaggerDocument;
+    next();
+}, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 app.use(cors({
     origin: [
         'http://localhost:4200',
