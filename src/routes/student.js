@@ -5,7 +5,6 @@ import { StudentSQL, CourseSQL, InscriptionSQL } from "../sequelize";
 import { mdUploadImage } from "../services/uploadService";
 import { sign } from "../services/jwtService";
 import { mdJWT } from "../middleware/verifyToken";
-import { get } from "http";
 
 const student = express.Router()
 
