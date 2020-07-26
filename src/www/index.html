@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>
+            Sample with socket IO
+        </title>
+    </head>
+    <body>
+        <h1>
+            Express & socket IO
+        </h1>
+        <div id="news">
+
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+        <script>
+            var socket = io('http://localhost:9090');
+
+            socket.on('news', function(data){
+                var div = document.getElementById("news")
+                console.log("Rendering news: ", data)
+
+                for ( var i = 0; i < data.length; i++){
+                    var newsItem = data[i];
+                    div.innerHTML += "<h3>" + newsItem.title + "<small>" + newsItem.date + "</small>" + "</h3> <br>"
+                }
+            });
+        </script>
+    </body>
+</html>

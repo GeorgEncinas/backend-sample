@@ -12,11 +12,11 @@ console.log(process.env.ENVIRONMENT)
 
 const example = express()
 
-example.get("/", (req, response) => {
-    response.status(200).json({
-        msg: 'ok'
-    })
-});
+// example.get("/", (req, response) => {
+//     response.status(200).json({
+//         msg: 'ok'
+//     })
+// });
 
 
 const login = {

@@ -1,4 +1,6 @@
 import express from 'express'
+import { listen } from "socket.io";
+import http from "http";
 
 import { Sequelize, UserSQL } from "./sequelize";
 import studentRotes from './routes/student'
@@ -66,4 +68,23 @@ app.use('/v2/student', mStudent);
 
 app.use(exampleRoute)
 
-app.listen(9090, handler)
+app.get('/', (req, res) =>{
+    res.sendFile(__dirname + '/www/index.html')
+})
+
+const server = http.createServer(app)
+const io = listen(server)
+
+const news = [
+    { title: 'El backend esta siendo muy usado en la clase de postulantes', date: '25/7/2020' },
+    { title: 'El backend esta siendo muy usado en la clase de postulantes', date: '25/7/2020' }
+]
+
+io.on("connection", (socket)=>{
+    console.log("Connected")
+
+    socket.emit('news', news)
+})
+
+server.listen(9090)
+// app.listen(9090, handler)
