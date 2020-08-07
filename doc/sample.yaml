@@ -1,0 +1,380 @@
+swagger: "2.0"
+info:
+  description: "This is a practice project made for admission season in the backend group of SCESI (2020)"
+  version: "1.0.0"
+  title: "Backend Sample"
+  termsOfService: "https://github.com/GeorgEncinas/backend-sample"
+  contact:
+    email: "jorge.encinas@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:9090"
+basePath: "/"
+tags:
+- name: "test"
+  description: "Endpoints to test connectivity to the API"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/GeorgEncinas/backend-sample"
+
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more"
+    url: "https://github.com/GeorgEncinas/backend-sample"
+schemes:
+# - "https"
+- "http"
+paths:
+  /info:
+    get:
+      tags:
+      - "test"
+      summary: "Return a 200 response if everything is ok"
+      description: "send the token of some user"
+      operationId: "info"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - in: header
+          name: X-Token
+          type: string
+          required: true
+      responses:
+        401:
+          description: "JWT error or jwt expired"
+        405:
+          description: "Invalid input"
+        200:
+          description: "Its ok"
+
+  /user/singup:
+    post:
+      tags:
+      - "user"
+      summary: "operation needed when creating a single user"
+      description: "No credentials needed"
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "User created"
+        500:
+          description: "Error found in save this user"
+        400:
+          description: "No found singup data"
+  /user/withArray:
+    post:
+      tags:
+      - "user"
+      summary: "Create users with given input array"
+      description: "Create multiple users providing an array of users"
+      operationId: "createUsersWithArrayInput"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "users created succesfully"
+        500:
+          description: "error saving the data"
+        400:
+          description: "insufficient data provided"
+  /user/createWithList:
+   post:
+      tags:
+      - "user"
+      summary: "Creates list of users with given input list"
+      description: ""
+      operationId: "createUsersWithListInput"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "users created succesfully"
+        500:
+          description: "error saving the data"
+        400:
+          description: "insufficient data provided"
+  /user/login:
+    post:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid username/password supplied"
+        500:
+          description: "Internal error in database"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /user/{email}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user email"
+      description: ""
+      operationId: "getUserByEmail"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "path"
+        description: "The email that needs to be fetched "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+    patch:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema: 
+          "$ref": "#/definitions/inBody"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: ""
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid email supplied"
+        200:
+          description: "User deleted"
+          
+  /student/info/{id}:
+    get:
+      tags:
+      - "student"
+      summary: "Get info of certain student "
+      description: ""
+      operationId: "getInfo"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        description: "Need id for get info "
+        required: true
+        type: string
+      responses:
+        "405":
+          description: "Invalid input"
+  /student/singup: 
+    post:
+      tags:
+      - "student"
+      summary: "Creates a new studen"
+      description: ""
+      operationId: "addStudent"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "need name and email"
+        required: true
+        schema:
+          $ref: '#/definitions/Student'
+      responses:
+        "200":
+          description: "Student created succesfully"
+        "500":
+          description: "Internal error when creating student"
+        
+ 
+  /student/curse:
+    post:
+      tags:
+      - "course"
+      summary: "Create a new course"
+      description: "Creating new course with a course name"
+      operationId: "createCourse"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "need course name"
+        required: true
+        schema:
+          $ref: '#/definitions/Student'
+      responses:
+        "200":
+          description: "Course created succesfully"
+        "500":
+          description: "Internal error when creating course"
+          
+          
+  /student/inscription:
+    post:
+      tags:
+      - "inscription"
+      summary: "Create a new inscription"
+      description: ""
+      operationId: "inscription"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Tags to filter by"
+        required: true
+        schema:
+          $ref: '#/definitions/Inscription'
+      responses:
+        "200":
+          description: "successful inscription"
+        "500":
+          description: "Internal error doing the inscription"
+
+
+
+definitions:
+  Student:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      name:
+        type: "string"
+    xml:
+      name: "User"
+  
+  Course:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+    xml:
+      name: "Category"
+  User:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+    xml:
+      name: "User"
+  
+  inBody:
+    type: "object"
+  Inscription:
+    type: "object"
+    properties:
+      year:
+        type: "integer"
+      StudentId:
+        type: "integer"
+      CourseId:
+        type: "integer"
+
+        
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

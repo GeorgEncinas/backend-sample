@@ -3,11 +3,6 @@ const Sequelize = require('sequelize')
 // const db  = require('../../config/mysequelize')
 
 const fields = {
-    id_student: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
     name: {
         type: Sequelize.STRING
     },
@@ -16,13 +11,13 @@ const fields = {
         validate: {
             isEmail: true,
         }
-        // allowNull defaults to true
     },
 };
 
-const options = { tableName: 'student' };
+const options = { tableName: 'student'};
 
 function getModel(Sequelize) {
+    Sequelize.literal("select 2+2 as result;")
     return Sequelize.define('Student', fields, options);
 }
 

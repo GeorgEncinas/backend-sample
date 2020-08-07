@@ -2,8 +2,10 @@ import express from 'express'
 
 import { Sequelize, UserSQL } from "./sequelize";
 import studentRotes from './routes/student'
+import mStudent from './routes/mongoStudent'
 import bluebird from "bluebird";
 import { example as exampleRoute } from './routes/example'
+import cors from 'cors'
 
 Promise = bluebird;
 
@@ -22,12 +24,14 @@ var userSchema = new mongoose.Schema({
         // specifying `index: true` is optional if you do `unique: true`
     },
     name: String,
-    password: String
+    password: String,
+    active: { type: Boolean, default: true },
 });
 
 export var User = mongoose.model('User', userSchema);
 
 const app = express()
+app.use(cors())
 const handler = () => {
     console.log('http://localhost:9090')
 }
@@ -38,6 +42,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 // routes
 app.use('/student', studentRotes);
+app.use('/v2/student', mStudent);
 
 // app.use(function (req, res, next) {
 //     res.status(404).send('Sorry cant find that!');
